@@ -122,25 +122,6 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  programs.neovim = {
-    enable = true;
-    configure = {
-      customRC = ''
-        set number
-        set cc=80
-        set clipboard+=unnamedplus
-        " set list
-        " set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:¶,precedes:«,extends:»
-        if &diff
-          colorscheme blue
-        endif
-      '';
-      packages.myVimPackage = with pkgs.vimPlugins; {
-        start = [ vim-nix ];
-      };
-    };
-  };
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.jayar = {
     isNormalUser = true;
@@ -152,7 +133,7 @@
     ];
   };
 
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ 
       "JetBrainsMono" 
       "Iosevka"
@@ -185,22 +166,23 @@
       input-remapper
       # command line apps
       killall
-      any-nix-shell
-      lsd
-      btop
-      htop
-      nvd
-      git
+      #any-nix-shell
+      # lsd
+      #btop
+      #htop
+      #nvd
+      #git
       joshuto
-      fzf
-      bat
-      lazygit
+      #fzf
+      #bat
+      #lazygit
       wl-clipboard
       wget
       curl
       # fish
       starship
       fishPlugins.fzf-fish
+      vim
     ];
   };
 

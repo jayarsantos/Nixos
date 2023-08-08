@@ -14,20 +14,19 @@
    };
 
   # Exclude base gnome packages
-  environment.gnome.excludePackages = with pkgs.gnome; [
-    gnome-remote-desktop
-    #epiphany
-    geary
-    gnome-software
-    gnome-tour 
-    gnome-console 
-    gnome-text-editor
-    gnome-connections 
-  ];
-
-  environment.systemPackages = with pkgs; [
-    #gnomeExtensions.pop-shell
-    gnome.gnome-tweaks
-    amberol
-  ];
+  environment = {
+    gnome.excludePackages = ( with pkgs; [
+      gnome-tour 
+      gnome-console 
+      gnome-text-editor
+      gnome-connections 
+      ]) ++ (
+      with pkgs.gnome; [ geary ]
+    );
+    systemPackages = with pkgs; [
+      #gnomeExtensions.pop-shell
+      gnome.gnome-tweaks
+      amberol
+    ];
+  };
 }

@@ -1,15 +1,31 @@
-{ config, pkgs, unstable, ... }:
+{ config, pkgs, ... }:
 
-#let
-#  unstable = import <nixos-unstable> { config = config.nixpkgs.config; };
-#in
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  imports = [ ./configs/dconf.nix ];
-  #nixpkgs.config = config.nixpkgs.config;
-  # The home.packages option allows you to install Nix packages into your
-  # environment.
+  imports = [
+    ./modules/nixvim.nix
+    ./configs/dconf.nix
+    ];
+  nixpkgs = {
+    # You can add overlays here
+    overlays = [
+      # Or define it inline, for example:
+      # (final: prev: {
+      #   hi = final.hello.overrideAttrs (oldAttrs: {
+      #     patches = [ ./change-hello-to-hi.patch ];
+      #   });
+      # })
+    ];
+      # Configure your nixpkgs instance
+    config = {
+      # Disable if you don't want unfree packages
+      allowUnfree = true;
+      # Workaround for https://github.com/nix-community/home-manager/issues/2942
+      allowUnfreePredicate = (_: true);
+    };
+  };
+
   home = {
     username = "jayar";
     homeDirectory = "/home/jayar";
@@ -53,22 +69,21 @@
       virt-manager
 
       # cli apps
-      neovim # I only use it inside vscode. Helix ftw
-      #unstable.ani-cli
-      #unstable.dconf2nix
-      #unstable.mov-cli
+      ani-cli
+      dconf2nix
+      mov-cli
 
       # dev dependencies
       # -- python
-      #unstable.python311
-      #unstable.poetry 
-      #unstable.python311Packages.pip
-      #unstable.python311Packages.ipykernel
+      python311
+      poetry 
+      python311Packages.pip
+      python311Packages.ipykernel
 
       # -- node js
-      #unstable.nodejs
-      #unstable.nodePackages.pnpm
-      #unstable.nodePackages.eas-cli
+      nodejs
+      nodePackages.pnpm
+      nodePackages.eas-cli
 
       # -- rust
       rustup
@@ -78,15 +93,14 @@
       ripgrep      
 
       # gnome extensions
-      #unstable.gnomeExtensions.unite
-      #unstable.gnomeExtensions.caffeine
+      gnomeExtensions.unite
+      gnomeExtensions.caffeine
       gnomeExtensions.aylurs-widgets
-      #unstable.gnomeExtensions.blur-my-shell
-      #unstable.gnomeExtensions.burn-my-windows
+      gnomeExtensions.blur-my-shell
+      gnomeExtensions.burn-my-windows
 
       # gnome themes
-      gnome.gnome-tweaks
-      #unstable.catppuccin-gtk
+      catppuccin-gtk
       flat-remix-gnome
 
       # fonts
@@ -184,7 +198,7 @@
   # if you don't want to manage your shell through Home Manager.
 
   home.sessionVariables = {
-    EDITOR = "nvim";
+    EDITOR = "vim";
   };
 
   xdg.configFile = {
@@ -197,4 +211,7 @@
    "msmtp".source = ./configs/msmtp;
    "foot".source = ./configs/foot;
   };
+
+  # Nicely reload system units when changing configs
+  systemd.user.startServices = "sd-switch";
 }
