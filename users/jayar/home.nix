@@ -115,6 +115,7 @@
     };
     kitty = {
       enable = true;
+      shellIntegration.enableFishIntegration = true;
     };
     password-store = {
       enable = true;
@@ -139,6 +140,7 @@
       ignores = [
         # IntelliJ files and folders
         # ".git/"
+        "result"
       ];
       attributes = [
         ".secrets/** filter=git-crypt diff=git-crypt"
@@ -186,10 +188,13 @@
   };
 
   xdg.configFile = {
-   # "alacritty/alacritty.yml".source = ./users/jayar/configs/alacritty/alacritty.yml;
-   "kitty/kitty.conf".source = ./configs/kitty/kitty.conf;
-   # "foot/foot.ini".source = ./configs/foot/foot.ini;
-    # "helix/config.toml".source = ./helix/config.toml;
-    # "helix/languages.toml".source = ./helix/languages.toml;
+   "kitty".source = ./configs/kitty;
+   "joshuto".source = ./configs/joshuto;
+   "mpd".source = ./configs/mpd;
+   "spotify-tui".source = ./configs/spotify-tui;
+   "spotifyd".source = ./configs/spotifyd;
+   "mutt".source = ./configs/mutt;
+   "msmtp".source = ./configs/msmtp;
+   "foot".source = ./configs/foot;
   };
 }

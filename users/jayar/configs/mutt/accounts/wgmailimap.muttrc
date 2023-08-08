@@ -1,0 +1,51 @@
+# vim: filetype=neomuttrc
+# example of a google imap configuration
+set realname = "Alejandro P. Santos III"
+set from = "apsantos.3rd@gmail.com
+set sendmail = "msmtp -a wgmail_account"
+alias Alejandro Alejandro P. Santos III <jayarsantos@gmail.com>
+set folder = "~/.mail/neomutt/gmail/wgmail_account"
+set header_cache = ~/.cache/mutt/wgmail_account/headers
+set message_cachedir = ~/.cache/mutt/wgmail_account/bodies
+set mbox_type = Maildir
+set reverse_name=yes
+set reverse_realname=no
+# notmuch settings
+set virtual_spoolfile=yes
+set folder=notmuch-root-folder
+
+macro index o "<shell-escape>~/.config/mutt/bin/mailsync -V wgmail_account<enter>" "run mbsync to sync wgmail_account"
+# Allows responding to calendar invites (replace mutt-ical with import_calendar_invite if you want to import the event into a local calendar too)
+macro attach,pager A '<shell-escape>rm -vf /tmp/.mutt.ics<enter><save-entry><kill-line>~/.config/mutt/bin/mutt-ical /tmp/.mutt.ics apsantos.3rd@gmail.com<enter><shell-escape>
+unmailboxes *
+# Create virtual mailboxes for all mail and all accounts (replace wgmail_account below)
+# virtual-mailboxes "All Accounts" "notmuch://?query=tag:INBOX"
+# virtual-mailboxes "All Mail" "notmuch://?query=tag:inbox%20and%20path:wgmail_account%2F**"
+virtual-mailboxes "Inbox - apsantos.3rd" "notmuch://?query=tag:inbox"
+virtual-mailboxes "Accounts" "notmuch://?query=tag:accounts"
+virtual-mailboxes "Sent" "notmuch://?query=tag:sent"
+virtual-mailboxes "Starred" "notmuch://?query=tag:starred"
+
+# set spoolfile = "+INBOX"
+# set record = "+[Gmail].Sent Mail"
+# set postponed = "+[Gmail].Drafts"
+# set trash = ""
+# Query with goobook
+set query_command="goobook -c ~/.config/goobook/goobookrc query %s"
+# a add to address book
+macro index,pager a "<pipe-message>goobook -c ~/.config/goobook/goobookrc add<return>" "add the sender address to Google contacts"
+# mailboxes "=INBOX" "=Accounts" "=[Gmail].Sent\ Mail" "=[Gmail].Starred"
+macro index gi "<change-folder>=INBOX<enter>" "go to inbox"
+macro index Mi ";<save-message>=INBOX<enter><enter>" "move mail to inbox"
+macro index Ci ";<copy-message>=INBOX<enter>" "copy mail to inbox"
+macro index gs "<change-folder>=Sent<enter>" "go to sent"
+macro index Ms ";<save-message>=Sent<enter><enter>" "move mail to sent"
+macro index Cs ";<copy-message>=Sent<enter>" "copy mail to sent"
+macro index ga "<change-folder>=Accounts<enter>" "go to drafts"
+macro index Ma ";<save-message>=Accounts<enter><enter>" "move mail to drafts"
+macro index Ca ";<copy-message>=Accounts<enter>" "copy mail to drafts"
+macro index gr "<change-folder>=[Gmail].Starred<enter>" "go to spam"
+macro index Mr ";<save-message>=[Gmail].Starred<enter><enter>" "move mail to spam"
+macro index Cr ";<copy-message>=[Gmail].Starred<enter>" "copy mail to spam"
+
+macro index \Cf "<enter-command>unset wait_key<enter><shell-escape>read -p 'Enter a search: ' x; echo \$x >~/.cache/mutt_terms<enter><change-folder>All Mail<enter><limit>~i \"\`notmuch --config ~/.config/mutt/configs/notmuch/notmuchrc search --output=messages \"\$(/bin/cat ~/.cache/mutt_terms) path:wgmail_account/**\" | head -n 1000 | perl -le '@a=<>;chomp@a;s/\^id:// for@a;$,=\"|\";print@a'\`\"<enter>" "Search all mail in this account"

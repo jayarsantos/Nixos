@@ -1,0 +1,26 @@
+# vim:filetype=msmtp
+## Used to configure your SMTP settings
+# the ACCOUNT_ALIAS used here should match the one you used in your mutt and
+# isync configs
+
+defaults
+auth	on
+tls	on
+tls_trust_file	/etc/ssl/certs/ca-certificates.crt
+logfile	~/.config/msmtp/msmtp.log
+
+account pgmail_account
+host smtp.gmail.com
+port 587
+from jayarsantos@gmail.com
+user jayarsantos@gmail.com
+passwordeval "pass show accounts.google.com/personal/papp_password | head -n1"
+
+account wgmail_account
+host smtp.gmail.com
+port 587
+from apsantos.3rd@gmail.com
+user apsantos.3rd@gmail.com
+passwordeval "pass show accounts.google.com/work/wapp_password | head -n1"
+
+account default: pgmail_account

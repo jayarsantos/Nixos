@@ -4,9 +4,9 @@
 
 { config, pkgs, lib, ... }:
 
-let
-  unstable = import <nixos-unstable> { config = config.nixpkgs.config; };
-in
+# let
+#   unstable = import <nixos-unstable> { config = config.nixpkgs.config; };
+# in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -199,7 +199,7 @@ in
       wget
       curl
       # fish
-      unstable.starship
+      # unstable.starship
       fishPlugins.fzf-fish
     ];
   };
@@ -211,7 +211,6 @@ in
     enableSSHSupport = true;
   };
 
-  system.copySystemConfiguration = true;
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave

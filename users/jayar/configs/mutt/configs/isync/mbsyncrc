@@ -1,0 +1,90 @@
+IMAPStore pgmail_account-remote
+Host imap.gmail.com
+Port 993
+User jayarsantos@gmail.com
+PassCmd "pass show accounts.google.com/personal/papp_password | head -n1"
+AuthMechs LOGIN
+TLSType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+MaildirStore pgmail_account-local
+Subfolders Verbatim
+# below path needs to be created if not excist
+Path ~/.mail/neomutt/gmail/pgmail_account/
+Inbox ~/.mail/neomutt/gmail/pgmail_account/INBOX
+Flatten .
+
+Channel sync-googlemail-default
+Far :pgmail_account-remote:
+Near :pgmail_account-local:
+# Select some mailboxes to sync
+Patterns "INBOX" "Account" "Important" "Family"
+Create Both
+
+Channel sync-googlemail-sent
+Far :pgmail_account-remote:"[Gmail]/Sent Mail"
+Near :pgmail_account-local:sent
+Create Near
+
+Channel sync-googlemail-starred
+Far :pgmail_account-remote:"[Gmail]/Starred"
+Near :pgmail_account-local:starred
+Create Near
+
+# Get all the channels together into a group.
+Group pgmail_account
+Channel sync-googlemail-default
+Channel sync-googlemail-sent
+Channel sync-googlemail-starred
+
+#Channel pgmail_account
+#Expunge Both
+#Far :pgmail_account-remote:
+#Near :pgmail_account-local:
+#atterns "INBOX" "Starred" "Important" "[Gmail]/Sent Mail"
+#Create Both
+#SyncState *
+#MaxMessages 1000
+#ExpireUnread no
+
+########################################
+####### Account for apsantos.3rd #######
+########################################
+IMAPStore wgmail_account-remote
+Host imap.gmail.com
+Port 993
+User apsantos.3rd@gmail.com
+PassCmd "pass show accounts.google.com/work/wapp_password | head -n1"
+AuthMechs LOGIN
+TLSType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+MaildirStore wgmail_account-local
+Subfolders Verbatim
+# below path needs to be created if not excist
+Path ~/.mail/neomutt/gmail/wgmail_account/
+Inbox ~/.mail/neomutt/gmail/wgmail_account/INBOX
+Flatten .
+
+Channel sync-wgooglemail-default
+Far :wgmail_account-remote:
+Near :wgmail_account-local:
+# Select some mailboxes to sync
+Patterns "INBOX" "Starred" "Important"
+Create Both
+
+Channel sync-wgooglemail-sent
+Far :wgmail_account-remote:"[Gmail]/Sent Mail"
+Near :wgmail_account-local:sent
+Create Near
+
+Channel sync-wgooglemail-starred
+Far :wgmail_account-remote:"[Gmail]/Starred"
+Near :wgmail_account-local:starred
+Create Near
+
+# Get all the channels together into a group.
+Group wgmail_account
+Channel sync-wgooglemail-default
+Channel sync-wgooglemail-sent
+Channel sync-wgooglemail-starred
