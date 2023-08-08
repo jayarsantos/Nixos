@@ -2,17 +2,20 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
-# let
-#   unstable = import <nixos-unstable> { config = config.nixpkgs.config; };
-# in
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # If you want to use modules from other flakes (such as nixos-hardware):
+      # inputs.hardware.nixosModules.common-cpu-amd
+      # inputs.hardware.nixosModules.common-ssd
+
+      # You can also split up your configuration and import pieces of it here:
+      # ./users.nix
+      ./modules/gnome.nix
       ./hardware-configuration.nix
       ./hardware-accellaration.nix
-      # <home-manager/nixos>
     ];
 
   # Bootloader.
@@ -41,19 +44,40 @@
     wireless.enable = false;  # Enables wireless support via wpa_supplicant.
   };
 
-  nix = {
-   # settings = {
-   #  auto-optimizse-store = true;
-   #};
-    package = pkgs.nixFlakes;
-    extraOptions = ''
-     experimental-features = nix-command flakes
-   '';
+  nixpkgs = {
+    # You can add overlays here
+    overlays = [
+      # If you want to use overlays exported from other flakes:
+      # neovim-nightly-overlay.overlays.default
+
+      # Or define it inline, for example:
+      # (final: prev: {
+      #   hi = final.hello.overrideAttrs (oldAttrs: {
+      #     patches = [ ./change-hello-to-hi.patch ];
+      #   });
+      # })
+    ];
+    # Configure your nixpkgs instance
+    config = {
+      # Disable if you don't want unfree packages
+      allowUnfree = true;
+    };
   };
 
-  nixpkgs = {
-    config = {
-      allowUnfree = true;
+  nix = {
+    # This will add each flake input as a registry
+    # To make nix3 commands consistent with your flake
+    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
+
+    # This will additionally add your inputs to the system's legacy channels
+    # Making legacy nix commands consistent as well, awesome!
+    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
+
+    settings = {
+      # Enable flakes and new 'nix' command
+      experimental-features = "nix-command flakes";
+      # Deduplicate and optimize nix store
+      auto-optimise-store = true;
     };
   };
 
@@ -74,20 +98,6 @@
     LC_TELEPHONE = "fil_PH";
     LC_TIME = "fil_PH";
   };
-
-  services = {
-    xserver = {
-      enable = true; # Enable the X11 windowing system.
-      # Enable the GNOME Desktop Environment.
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
-      excludePackages = [ pkgs.xterm ];
-      # Configure keymap in X11
-      layout = "us";
-      xkbVariant = "";
-    };
-   input-remapper.enable = true;
-   };
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -151,8 +161,6 @@
     })
   ];
 
-  # home-manager.users.jayar = import ./home.nix { inherit pkgs unstable config lib; };
-
   programs = {
     dconf.enable = true;
     fish = {
@@ -172,14 +180,6 @@
 
   environment = {
     shells = with pkgs; [ fish ];
-    gnome.excludePackages = (with pkgs; [ 
-      gnome-tour 
-      gnome-console 
-      gnome-text-editor
-      gnome-connections 
-    ]) ++ (
-      with pkgs.gnome; [ geary ]
-    );
     systemPackages = with pkgs; [
       # gui apps that can't be installed on home.nix
       input-remapper
@@ -199,7 +199,7 @@
       wget
       curl
       # fish
-      # unstable.starship
+      starship
       fishPlugins.fzf-fish
     ];
   };

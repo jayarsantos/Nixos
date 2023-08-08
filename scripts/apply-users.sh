@@ -1,4 +1,4 @@
 #!/bin/sh
 pushd ~/.dotfiles
-home-manager switch -f ./users/jayar/home.nix
+home-manager build --flake .#jayar@jaynix
 popd
