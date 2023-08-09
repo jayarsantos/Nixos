@@ -7,15 +7,11 @@
 {
   imports =
     [
-      # If you want to use modules from other flakes (such as nixos-hardware):
-      # inputs.hardware.nixosModules.common-cpu-amd
-      # inputs.hardware.nixosModules.common-ssd
-
-      # You can also split up your configuration and import pieces of it here:
-      # ./users.nix
+      # ./modules/flatpak.nix
+      ./modules/games.nix
       ./modules/gnome.nix
       ./hardware-configuration.nix
-      ./hardware-accellaration.nix
+      ./hardware-intel.nix
     ];
 
   # Bootloader.
@@ -26,17 +22,52 @@
     loader.efi.canTouchEfiVariables = true;
     plymouth.enable = true; # nice boot splash screen
     plymouth.theme = "bgrt"; # default is bgrt
-  
+
+    # Setup keyfile
+    initrd.secrets = {
+      "/crypto_keyfile.bin" = null;
+    };
+
+    # Enable swap on luks
+    initrd.luks.devices."luks-e2d9a311-caa6-4e60-bacf-3f736d23682c".device = "/dev/disk/by-uuid/e2d9a311-caa6-4e60-bacf-3f736d23682c";
+    initrd.luks.devices."luks-e2d9a311-caa6-4e60-bacf-3f736d23682c".keyFile = "/crypto_keyfile.bin";
+
   };
 
-  # Setup keyfile
-  boot.initrd.secrets = {
-    "/crypto_keyfile.bin" = null;
+  # Services
+  services = {
+    tlp.enable = lib.mkDefault (
+      (lib.versionOlder (
+        lib.versions.majorMinor lib.version
+        ) "23.05") || !config.services.power-profiles-daemon.enable
+    );
+    # for ssd's
+    fstrim.enable = lib.mkDefault true;
+    # Enable CUPS to print documents.
+    printing.enable = true;
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      # If you want to use JACK applications, uncomment this
+      #jack.enable = true;
+
+      # use the example session manager (no others are packaged yet so this is enabled by default,
+      # no need to redefine it in your config for now)
+      # media-session.enable = true;
+
+      # Enable touchpad support (enabled default in most desktopManager).
+      # services.xserver.libinput.enable = true;
+
+    };
   };
 
-  # Enable swap on luks
-  boot.initrd.luks.devices."luks-e2d9a311-caa6-4e60-bacf-3f736d23682c".device = "/dev/disk/by-uuid/e2d9a311-caa6-4e60-bacf-3f736d23682c";
-  boot.initrd.luks.devices."luks-e2d9a311-caa6-4e60-bacf-3f736d23682c".keyFile = "/crypto_keyfile.bin";
+  # Enable sound
+  sound.enable = true;
+  hardware.pulseaudio.enable = false; # should be set to false when pipewire is in use
+
+  security.rtkit.enable = true;
 
   networking = {
     hostName = "jaynix"; # Define your hostname.
@@ -65,6 +96,15 @@
   };
 
   nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+
+    optimise = {
+      automatic = true;
+    };
     # This will add each flake input as a registry
     # To make nix3 commands consistent with your flake
     registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
@@ -78,6 +118,8 @@
       experimental-features = "nix-command flakes";
       # Deduplicate and optimize nix store
       auto-optimise-store = true;
+      allowed-users = ["@wheel"];
+      trusted-users = ["root" "jayar"];
     };
   };
 
@@ -86,7 +128,6 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_PH.UTF-8";
-
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "fil_PH";
     LC_IDENTIFICATION = "fil_PH";
@@ -99,29 +140,6 @@
     LC_TIME = "fil_PH";
   };
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.jayar = {
     isNormalUser = true;
@@ -133,15 +151,6 @@
     ];
   };
 
-  fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ 
-      "JetBrainsMono" 
-      "Iosevka"
-      "DejaVuSansMono"
-     ]; 
-    })
-  ];
-
   programs = {
     dconf.enable = true;
     fish = {
@@ -152,11 +161,6 @@
       '';
     };
 
-    steam = {
-      enable = true;
-      remotePlay.openFirewall = true;
-      dedicatedServer.openFirewall = true;
-    };
   };
 
   environment = {
@@ -166,20 +170,19 @@
       input-remapper
       # command line apps
       killall
-      #any-nix-shell
-      # lsd
-      #btop
-      #htop
-      #nvd
-      #git
+      any-nix-shell
+      lsd
+      btop
+      htop
+      nvd
+      git
       joshuto
-      #fzf
-      #bat
-      #lazygit
+      fzf
+      bat
+      lazygit
       wl-clipboard
       wget
       curl
-      # fish
       starship
       fishPlugins.fzf-fish
       vim

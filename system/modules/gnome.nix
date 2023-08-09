@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }: {
+{ pkgs, ... }: {
   services = {
     xserver = {
       enable = true; # Enable the X11 windowing system.
@@ -13,13 +13,22 @@
    input-remapper.enable = true;
    };
 
+  fonts.packages = with pkgs; [
+    (nerdfonts.override { fonts = [
+      "JetBrainsMono"
+      "Iosevka"
+      "DejaVuSansMono"
+     ];
+    })
+  ];
+
   # Exclude base gnome packages
   environment = {
     gnome.excludePackages = ( with pkgs; [
-      gnome-tour 
-      gnome-console 
+      gnome-tour
+      gnome-console
       gnome-text-editor
-      gnome-connections 
+      gnome-connections
       ]) ++ (
       with pkgs.gnome; [ geary ]
     );
@@ -27,6 +36,7 @@
       #gnomeExtensions.pop-shell
       gnome.gnome-tweaks
       amberol
+      gnome-2048
     ];
   };
 }

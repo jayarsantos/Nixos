@@ -4,8 +4,9 @@
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   imports = [
-    ./modules/nixvim.nix
+    ./modules/nixvim
     ./configs/dconf.nix
+    # ./custom-fonts
     ];
   nixpkgs = {
     # You can add overlays here
@@ -40,19 +41,18 @@
     stateVersion = "23.05";
     packages = with pkgs; [
       # gui apps
-      #firefox
       passff-host
       chromium
       inkscape
-      #unstable.obs-studio
-      #unstable.discord
-      #unstable.ferdium
-      #unstable.lutris
-      #unstable.obsidian
-      #unstable.postman
-      #unstable.youtube-music
-      #unstable.cemu
-      #anydesk # unfree
+      obs-studio
+      discord
+      ferdium
+      lutris
+      obsidian
+      postman
+      youtube-music
+      cemu
+      anydesk # unfree
       mpv
       remmina
 
@@ -60,9 +60,9 @@
       wineWowPackages.stable
 
       # dev gui apps
-      #unstable.vscode.fhs
-      #unstable.android-studio
-      #unstable.godot_4
+      vscode.fhs
+      android-studio
+      godot_4
 
       # virtualization
       gnome.gnome-boxes
@@ -76,7 +76,7 @@
       # dev dependencies
       # -- python
       python311
-      poetry 
+      poetry
       python311Packages.pip
       python311Packages.ipykernel
 
@@ -90,7 +90,7 @@
 
       # nvchad
       gcc
-      ripgrep      
+      ripgrep
 
       # gnome extensions
       gnomeExtensions.unite
@@ -103,24 +103,28 @@
       catppuccin-gtk
       flat-remix-gnome
 
+      #utilities
+      unzip
+      p7zip
+
       # fonts
-      (nerdfonts.override { fonts = [ 
-        "JetBrainsMono" 
-        "Iosevka" 
+      (nerdfonts.override { fonts = [
+        "JetBrainsMono"
+        "Iosevka"
         "DejaVuSansMono"
         "FantasqueSansMono"
-        ]; 
+      ];
       })
 
       #git
       git-crypt
       pinentry-gnome
-    ]; 
+    ];
   };
 
   # fonts.fontconfig.enable = true;
 
-  programs = {  
+  programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
     firefox = {
@@ -142,7 +146,7 @@
     git = {
       enable = true;
       userName  = "Alejandro P. Santos III";
-      userEmail = "jayarsantos@mail.com"; 
+      userEmail = "jayarsantos@mail.com";
       signing = {
         signByDefault = true;
         key = "C0439FF5660EFCEB";
@@ -197,9 +201,10 @@
   #
   # if you don't want to manage your shell through Home Manager.
 
-  home.sessionVariables = {
-    EDITOR = "vim";
-  };
+  #declared in nixvim setup
+  # home.sessionVariables = {
+  #   EDITOR = "vim";
+  # };
 
   xdg.configFile = {
    "kitty".source = ./configs/kitty;
