@@ -31,6 +31,7 @@
       }
     ];
     shellAbbrs = {
+      v = "nvim";
       c = "clear";
       j = "joshuto";
       gcollect = "sudo nix-collect-garbage -d | nix-collect-garbage -d";

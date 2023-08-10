@@ -9,6 +9,7 @@
     ./modules/fish.nix
     ./modules/starship.nix # fish now has it's own prompt goodies
     ./modules/git.nix
+    ./modules/spotifyd.nix
     # ./custom-fonts
     ];
   nixpkgs = {
@@ -121,7 +122,6 @@
       # spotify
       spotify
       spotify-tui
-      spotifyd
       whatsapp-for-linux
       nchat
     ];
@@ -145,6 +145,7 @@
       enable = true;
       package = pkgs.pass-wayland.withExtensions (exts: [ exts.pass-otp ]);
       settings = {
+        PASSWORD_STORE_DIR = "$HOME/.password-store";
         PASSWORD_STORE_CLIP_TIME = "15";
         PASSWORD_STORE_KEY = "BEEEC35C99A234339040344C1024516BEE4EEB1F";
       };
@@ -196,8 +197,8 @@
    "kitty".source = ./configs/kitty;
    "joshuto".source = ./configs/joshuto;
    "mpd".source = ./configs/mpd;
-   "spotify-tui".source = ./configs/spotify-tui;
-   "spotifyd".source = ./configs/spotifyd;
+   # "spotify-tui".source = ./configs/spotify-tui;
+   # "spotifyd".source = ./configs/spotifyd;
    "mutt".source = ./configs/mutt;
    "msmtp".source = ./configs/msmtp;
    "foot".source = ./configs/foot;

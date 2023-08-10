@@ -69,10 +69,9 @@
     };
   };
 
-  # Enable sound
+  # Enable sound for pipewire
   sound.enable = true;
   hardware.pulseaudio.enable = false; # should be set to false when pipewire is in use
-
   security.rtkit.enable = true;
 
   networking = {
@@ -154,7 +153,6 @@
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       firefox
-    #  thunderbird
     ];
   };
 
