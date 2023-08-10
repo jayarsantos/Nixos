@@ -18,9 +18,15 @@
   boot = {
     tmp.cleanOnBoot = true;
     # Use the systemd-boot EFI boot loader.
-    loader.systemd-boot.enable = true;
-    loader.systemd-boot.configurationLimit = 5;
-    loader.efi.canTouchEfiVariables = true;
+    loader = {
+      timeout = 0;
+      efi.canTouchEfiVariables = true;
+        systemd-boot = {
+          enable = true;
+          configurationLimit = 5;
+          consoleMode = "max";
+        };
+    };
     plymouth.enable = true; # nice boot splash screen
     plymouth.theme = "bgrt"; # default is bgrt
 
@@ -97,6 +103,14 @@
   };
 
   nix = {
+    # This will add each flake input as a registry
+    # To make nix3 commands consistent with your flake
+    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
+
+    # This will additionally add your inputs to the system's legacy channels
+    # Making legacy nix commands consistent as well, awesome!
+    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
+
     gc = {
       automatic = true;
       dates = "weekly";
@@ -106,13 +120,6 @@
     optimise = {
       automatic = true;
     };
-    # This will add each flake input as a registry
-    # To make nix3 commands consistent with your flake
-    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
-
-    # This will additionally add your inputs to the system's legacy channels
-    # Making legacy nix commands consistent as well, awesome!
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
 
     settings = {
       # Enable flakes and new 'nix' command

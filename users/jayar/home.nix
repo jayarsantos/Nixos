@@ -121,6 +121,12 @@
       #git
       git-crypt
       pinentry-gnome
+
+      # spotify
+      spotify
+      spotify-tui
+      spotifyd
+      whatsapp
     ];
   };
 

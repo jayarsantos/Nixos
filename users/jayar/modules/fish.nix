@@ -9,6 +9,13 @@
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
     '';
+    shellAbbrs = {
+      c = "clear";
+      gc = "sudo nix-collect-garbage -d | nix-collect-garbage -d";
+      apply-sys = "sh ~/.dotfiles/scripts/apply-system.sh";
+      apply-user = "sh ~/.dotfiles/scripts/apply-users.sh";
+      update-flock = "sh ~/.dotfiles/scripts/update-flake.sh";
+    };
     plugins = [
       # Enable a plugin (here grc for colorized command output) from nixpkgs
       { name = "grc"; src = pkgs.fishPlugins.grc.src; }
