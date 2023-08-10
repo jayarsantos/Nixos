@@ -4,10 +4,11 @@
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   imports = [
+    ./modules/dconf.nix
     ./modules/nixvim
     ./modules/fish.nix
-    #./modules/starship.nix # fish now has it's own prompt goodies
-    ./configs/dconf.nix
+    ./modules/starship.nix # fish now has it's own prompt goodies
+    ./modules/git.nix
     # ./custom-fonts
     ];
   nixpkgs = {
@@ -72,7 +73,6 @@
 
       # cli apps
       ani-cli
-      dconf2nix
       mov-cli
 
       # dev dependencies
@@ -118,15 +118,12 @@
       ];
       })
 
-      #git
-      git-crypt
-      pinentry-gnome
-
       # spotify
       spotify
       spotify-tui
       spotifyd
-      whatsapp
+      whatsapp-for-linux
+      nchat
     ];
   };
 
@@ -151,27 +148,6 @@
         PASSWORD_STORE_CLIP_TIME = "15";
         PASSWORD_STORE_KEY = "BEEEC35C99A234339040344C1024516BEE4EEB1F";
       };
-    };
-    git = {
-      enable = true;
-      userName  = "Alejandro P. Santos III";
-      userEmail = "jayarsantos@mail.com";
-      signing = {
-        signByDefault = true;
-        key = "C0439FF5660EFCEB";
-      };
-      extraConfig = {
-        init.defaultBranch = "main";
-        pull.rebase = false;
-      };
-      ignores = [
-        # IntelliJ files and folders
-        # ".git/"
-        "result"
-      ];
-      attributes = [
-        ".secrets/** filter=git-crypt diff=git-crypt"
-      ];
     };
     gpg = {
       enable = true;

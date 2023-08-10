@@ -5,14 +5,13 @@
 { config, pkgs, lib, inputs, ... }:
 
 {
-  imports =
-    [
-      # ./modules/flatpak.nix
-      ./modules/games.nix
-      ./modules/gnome.nix
-      ./hardware-configuration.nix
-      ./hardware-intel.nix
-    ];
+  imports = [
+    # ./modules/flatpak.nix
+    ./modules/gnome.nix
+    ./modules/games.nix
+    ./hardware-configuration.nix
+    ./hardware-intel.nix
+  ];
 
   # Bootloader.
   boot = {
@@ -166,6 +165,8 @@
   environment = {
     shells = with pkgs; [ fish ];
     systemPackages = with pkgs; [
+      # dconf exporter
+      dconf2nix
       # gui apps that can't be installed on home.nix
       input-remapper
       # command line apps

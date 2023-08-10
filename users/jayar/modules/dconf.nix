@@ -72,19 +72,20 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/shell" = {
+      favorite-apps = [
+        "firefox.desktop"
+        "org.gnome.Nautilus.desktop"
+        "code.desktop"
+        "ferdium.desktop"
+        "Alacritty.desktop"
+      ];
       app-picker-layout = "[{'org.gnome.Contacts.desktop': <{'position': <0>}>, 'org.gnome.Weather.desktop': <{'position': <1>}>, 'org.gnome.clocks.desktop': <{'position': <2>}>, 'org.gnome.Maps.desktop': <{'position': <3>}>, 'org.gnome.Totem.desktop': <{'position': <4>}>, 'org.gnome.Calculator.desktop': <{'position': <5>}>, 'simple-scan.desktop': <{'position': <6>}>, 'org.gnome.Settings.desktop': <{'position': <7>}>, 'org.gnome.Extensions.desktop': <{'position': <8>}>, 'gnome-system-monitor.desktop': <{'position': <9>}>, 'Alacritty.desktop': <{'position': <10>}>, 'nixos-manual.desktop': <{'position': <11>}>, 'Utilities': <{'position': <12>}>, 'btop.desktop': <{'position': <13>}>, 'yelp.desktop': <{'position': <14>}>, 'xterm.desktop': <{'position': <15>}>, 'org.gnome.Epiphany.desktop': <{'position': <16>}>, 'org.gnome.Cheese.desktop': <{'position': <17>}>, 'org.gnome.Calendar.desktop': <{'position': <18>}>, 'htop.desktop': <{'position': <19>}>}, {'org.gnome.Music.desktop': <{'position': <0>}>, 'nvim.desktop': <{'position': <1>}>, 'Helix.desktop': <{'position': <2>}>, 'obsidian.desktop': <{'position': <3>}>, 'android-studio.desktop': <{'position': <4>}>, 'org.gnome.Boxes.desktop': <{'position': <5>}>, 'virt-manager.desktop': <{'position': <6>}>, 'org.gnome.Photos.desktop': <{'position': <7>}>, 'ferdium.desktop': <{'position': <8>}>, 'mpv.desktop': <{'position': <9>}>, 'umpv.desktop': <{'position': <10>}>, 'org.godotengine.Godot.desktop': <{'position': <11>}>, 'ranger.desktop': <{'position': <12>}>, 'code.desktop': <{'position': <13>}>}]";
       disabled-extensions = [];
-      enabled-extensions = [ 
+      enabled-extensions = [
         "caffeine@patapon.info"
         "user-theme@gnome-shell-extensions.gcampax.github.com"
-        "unite@hardpixel.eu" "widgets@aylur"
-      ];
-      favorite-apps = [ 
-        "firefox.desktop" 
-        "org.gnome.Nautilus.desktop"
-        "code.desktop" 
-        "ferdium.desktop"
-        "Alacritty.desktop" 
+        "unite@hardpixel.eu"
+        "widgets@aylur"
       ];
     };
 
