@@ -3,17 +3,19 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # unstable
-    unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    home-unstable = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "unstable";
-    };
+    # unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    # home-unstable = {
+    #   url = "github:nix-community/home-manager";
+    #   inputs.nixpkgs.follows = "unstable";
+    # };
     # Home manager
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.05";
+      url = "github:nix-community/home-manager";
+      # url = "github:nix-community/home-manager/release-23.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # nixvim
@@ -26,7 +28,7 @@
 
   };
 
-  outputs = { nixpkgs, home-manager, nixvim, unstable, home-unstable, ... }@inputs:
+  outputs = { nixpkgs, home-manager, nixvim, ... }@inputs:
    {
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
