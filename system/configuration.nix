@@ -19,6 +19,7 @@
     tmp.cleanOnBoot = true;
     # Use the systemd-boot EFI boot loader.
     loader.systemd-boot.enable = true;
+    loader.systemd-boot.configurationLimit = 5;
     loader.efi.canTouchEfiVariables = true;
     plymouth.enable = true; # nice boot splash screen
     plymouth.theme = "bgrt"; # default is bgrt
@@ -153,14 +154,6 @@
 
   programs = {
     dconf.enable = true;
-    fish = {
-      enable = true;
-      promptInit = ''
-        any-nix-shell fish --info-right | source
-        source (/run/current-system/sw/bin/starship init fish --print-full-init | psub)
-      '';
-    };
-
   };
 
   environment = {
@@ -183,9 +176,9 @@
       wl-clipboard
       wget
       curl
-      starship
       fishPlugins.fzf-fish
       vim
+      libreoffice
     ];
   };
 

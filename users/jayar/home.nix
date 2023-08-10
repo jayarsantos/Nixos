@@ -1,10 +1,12 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   imports = [
     ./modules/nixvim
+    ./modules/fish.nix
+    #./modules/starship.nix # fish now has it's own prompt goodies
     ./configs/dconf.nix
     # ./custom-fonts
     ];
@@ -127,6 +129,7 @@
   programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
+
     firefox = {
       enable = true;
       package = (pkgs.firefox.override { extraNativeMessagingHosts = [ pkgs.passff-host ]; });
@@ -168,6 +171,7 @@
       enable = true;
     };
   };
+
   services = {
     gpg-agent = {
       enable = true;
